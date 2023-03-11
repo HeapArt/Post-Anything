@@ -14,8 +14,9 @@
     <div id="id_post_bucket"></div>
     <script>
       fetch("https://docs.google.com/spreadsheets/d/1r5NdgWX5oXBRPopJfdgtNmcrw-csy0YlCBdfnEsalLU/gviz/tq?tqx=out:json&tq&gid=0")
-        .then((response) => {
-          document.getElementById("id_post_bucket").innerText=response.text();
+        .then((response) => response.text())
+        .then((text) => {
+          document.getElementById("id_post_bucket").innerText=text;
         })
     </script>
   </body>
