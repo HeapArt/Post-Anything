@@ -1,1 +1,26 @@
-Hello
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Post Anything</title>
+  </head>
+  <body>
+    <div>
+      Use this <a href="https://forms.gle/vLDiJeB4kdmAuTHU9">Google form</a> to post anything on this page. Refresh to page to see Update
+    </div>
+
+    <div id="id_post_bucket"></div>
+    <script>
+      fetch("https://docs.google.com/spreadsheets/d/1r5NdgWX5oXBRPopJfdgtNmcrw-csy0YlCBdfnEsalLU/edit?usp=sharing/gviz/tq?tqx=out:json&tq&gid=0")
+        .then((response) => response.json())
+        .then((result) => {
+          console.log("Success:", result);
+        })
+        .catch((error) => {
+        console.error("Error:", error);
+      });
+    </script>
+  </body>
+</html>
