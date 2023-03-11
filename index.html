@@ -13,14 +13,10 @@
 
     <div id="id_post_bucket"></div>
     <script>
-      fetch("https://docs.google.com/spreadsheets/d/1r5NdgWX5oXBRPopJfdgtNmcrw-csy0YlCBdfnEsalLU/edit?usp=sharing/gviz/tq?tqx=out:json&tq&gid=0")
-        .then((response) => response.json())
-        .then((result) => {
-          console.log("Success:", result);
+      fetch("https://docs.google.com/spreadsheets/d/1r5NdgWX5oXBRPopJfdgtNmcrw-csy0YlCBdfnEsalLU/gviz/tq?tqx=out:csv&tq&gid=0")
+        .then((response) => {
+          document.getElementById("id_post_bucket").innerText(response);
         })
-        .catch((error) => {
-        console.error("Error:", error);
-      });
     </script>
   </body>
 </html>
