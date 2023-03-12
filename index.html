@@ -6,18 +6,157 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Post Anything</title>
   </head>
+  <script>
+
+    
+    function loadGoogleDataTable( iGoogleDataTableJson ) {
+
+      const cColIndex = {
+        timeStamp : {
+          label : "Timestamp",
+          index : -1,
+          className : "class_post_date",
+        },
+        postTitle : {
+          label : "The title of your post",
+          index : -1,
+          className : "class_post_title",
+        },
+        postText : {
+          label : "What do you want to say?",
+          index : -1,
+          className : "class_post_text",
+        },
+        imageLink : {
+          label : "Add a Picture",
+          index : -1,
+          className : "class_post_image",
+        },
+        signature : {
+          label : "Your Signature",
+          index : -1,
+          className : "class_post_signature",
+        },
+        email : {
+          label : "Email Address",
+          index : -1,
+          className : "class_post_email",
+        },
+      }
+
+      for (const [key, value] of Object.entries(cColIndex) ) {
+        for (var wi = 0; wi < iGoogleDataTableJson.cols.length; ++wi ) {
+          if ( value.label == iGoogleDataTableJson.cols[wi].label ) {
+            value.index = wi;
+          }
+        }
+      }
+      
+      var wHtmlString = "";
+      if ( 0 == iGoogleDataTableJson.rows.length ) {
+        wHtmlString = "<div class = 'class_post_entry' >Sorry No Posts Found. Add one yourself?</div>"
+      }
+      else {
+        for ( var wi = 0; wi < iGoogleDataTableJson.rows.length; ++wi ) {
+          var wRowData = iGoogleDataTableJson.rows[wi].c;        
+          var wInnerString = "";
+          
+          var value = cColIndex.timeStamp;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].f + "</div>";
+          }
+
+          var value = cColIndex.postTitle;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
+          }
+
+          var value = cColIndex.postText;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
+          }
+
+          var value = cColIndex.imageLink;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<img class = '" + value.className + "' src=\'" + wRowData[value.index].v + "\'>";
+          }
+
+          var value = cColIndex.signature;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
+          }
+
+          var value = cColIndex.email;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
+          }
+
+          wHtmlString += "<div class = 'class_post_entry' >" + wInnerString + "</div>";
+        }
+      }
+
+      document.getElementById("id_post_bucket").innerHTML = wHtmlString;
+    }
+
+    function loadErrorMessage( iError ) {
+      document.getElementById("id_post_bucket").innerText = iError;
+    }
+
+    function getPosts() {
+
+    fetch("https://docs.google.com/spreadsheets/d/10c2MLqTOzV1GJCtUzmnNLt-08X60aBlZ_MDxqLkcIt4/gviz/tq?tqx=out:json&gid=0&tq=select+*+order+by+A+desc+limit+100")
+      .then((response) => response.text())
+      .then((text) => {          
+        wJsonText = "{}";
+        wStartIndex = text.indexOf("{\"");
+        if ( -1 != wStartIndex ) {
+          wEndIndex = text.lastIndexOf("})");
+          if ( -1 != wEndIndex) {
+            wEndIndex += 1;
+            wJsonText = text.substring(wStartIndex,wEndIndex);
+            return JSON.parse( wJsonText );
+          }
+        }
+
+        throw new Error('Unable to load Response to JSON');
+      })
+      .then((googleDataTableJson) => {
+        if ( "ok" != googleDataTableJson.status )
+        {
+          throw new Error('Failed to get data from database');
+        }
+        
+        loadGoogleDataTable( googleDataTableJson.table );
+        
+      })
+      .catch( error => {
+        loadErrorMessage( error )
+      })
+
+    }
+
+    getPosts();
+    setInterval(getPosts, 10000);
+
+  </script>
+  <style>
+    body {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .class_post_entry {
+      border: 1px solid black;
+      border-radius: 5px;
+      margin: 5px;
+      padding: 10px;
+      width: auto;
+    }
+  </style>
   <body>
     <div>
       Use this <a href="https://forms.gle/vLDiJeB4kdmAuTHU9">Google form</a> to post anything on this page. Refresh to page to see Update
     </div>
-
     <div id="id_post_bucket"></div>
-    <script>
-      fetch("https://docs.google.com/spreadsheets/d/1r5NdgWX5oXBRPopJfdgtNmcrw-csy0YlCBdfnEsalLU/gviz/tq?tqx=out:json&tq&gid=0")
-        .then((response) => response.text())
-        .then((text) => {
-          document.getElementById("id_post_bucket").innerText=text;
-        })
-    </script>
   </body>
 </html>
