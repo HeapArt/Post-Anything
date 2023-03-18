@@ -27,11 +27,6 @@
           index : -1,
           className : "class_post_text",
         },
-        imageLink : {
-          label : "Add a Picture",
-          index : -1,
-          className : "class_post_image",
-        },
         signature : {
           label : "Your Signature",
           index : -1,
@@ -61,35 +56,35 @@
           var wRowData = iGoogleDataTableJson.rows[wi].c;        
           var wInnerString = "";
           
-          var value = cColIndex.timeStamp;
-          if (null != wRowData[value.index]) {
-              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].f + "</div>";
-          }
-
           var value = cColIndex.postTitle;
           if (null != wRowData[value.index]) {
               wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
           }
 
-          var value = cColIndex.postText;
-          if (null != wRowData[value.index]) {
-              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
-          }
-
-          var value = cColIndex.imageLink;
-          if (null != wRowData[value.index]) {
-              wInnerString += "<img class = '" + value.className + "' src=\'" + wRowData[value.index].v + "\'>";
-          }
-
+          wInnerString += "<div class = 'class_post_aux'>";
           var value = cColIndex.signature;
           if (null != wRowData[value.index]) {
               wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
+          }
+
+          var value = cColIndex.timeStamp;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].f + "</div>";
           }
 
           var value = cColIndex.email;
           if (null != wRowData[value.index]) {
               wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v + "</div>";
           }
+
+
+          wInnerString += "</div>";
+
+          var value = cColIndex.postText;
+          if (null != wRowData[value.index]) {
+              wInnerString += "<div class = '" + value.className + "'>" + wRowData[value.index].v.replaceAll("\n","</br>") + "</div>";
+          }
+
 
           wHtmlString += "<div class = 'class_post_entry' >" + wInnerString + "</div>";
         }
@@ -141,8 +136,21 @@
   </script>
   <style>
     body {
+      margin: auto;
+      background-color: lightgrey;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #id_overhead {
+      width: 100%;
+      background-color: white;
+    }
+    
+    #id_Title, #id_form, #id_post_body{
       max-width: 800px;
       margin: auto;
+      vertical-align: center;
+      padding: 10px;
     }
 
     .class_post_entry {
@@ -151,12 +159,63 @@
       margin: 5px;
       padding: 10px;
       width: auto;
+      background-color: white;
     }
+
+    .class_post_title {
+      font-weight: bold;
+      font-size: 110%;
+      color: cornflowerblue;
+    }
+
+    .class_post_aux {
+      font-size: 75%;
+      width: 100%;
+      
+      display: grid;
+      grid-template-columns: auto auto auto;
+      grid-template-rows: auto auto auto;
+      
+    }
+
+    .class_post_signature {
+      grid-row: 1;
+      grid-column: 1;
+      text-align: left;
+      float: left;
+    }
+
+    .class_post_email {
+      grid-row: 2;
+      grid-column: 1;
+      text-align: left;
+      float: left;
+    }
+    
+    .class_post_date {
+      grid-row: 1;
+      grid-column: 3;
+      text-align: right;
+      float: left;
+    }
+
+    .class_post_text {
+      margin-top: 10px;
+    }
+
   </style>
   <body>
-    <div>
-      Use this <a href="https://forms.gle/vLDiJeB4kdmAuTHU9">Google form</a> to post anything on this page. Refresh to page to see Update
+    <div id="id_overhead">
+      <div id="id_Title">
+        <h1>Post-Anything!</h1>
+        <p>by HeapArt</p>
+      </div>
+      <div id="id_form">
+        Use this <a href="https://forms.gle/vLDiJeB4kdmAuTHU9">Google form</a> to post anything on this page. Refresh to page to see Update
+      </div>
     </div>
-    <div id="id_post_bucket"></div>
+    <div id="id_post_body">
+      <div id="id_post_bucket"></div>
+    </div>
   </body>
 </html>
